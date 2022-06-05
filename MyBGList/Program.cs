@@ -21,8 +21,6 @@ if (app.Environment.IsDevelopment())
     // Swagger middlewares
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    
 }
 
 // Retrieve the literal value from the appsettings.json file(s)
