@@ -16,7 +16,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
+if (app.Configuration.GetValue<bool>("UseSwagger"))
 {
     // Swagger middlewares
     app.UseSwagger();

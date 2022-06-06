@@ -31,7 +31,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "BoardGames",
+      "launchUrl": "boardgames",
       "applicationUrl": "https://localhost:55221;http://localhost:55222",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging"
