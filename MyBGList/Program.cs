@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,11 +63,15 @@ app.UseCors();
 app.UseAuthorization();
 
 // Handles exceptions for end users
-app.MapGet("/error", [EnableCors("AnyOrigin")] () => 
+app.MapGet("/error", 
+    [EnableCors("AnyOrigin")]
+    [ResponseCache(NoStore = true)] () => 
     Results.Problem());
 
 // For testing exceptions handling
-app.MapGet("/error/test", [EnableCors("AnyOrigin")] () => 
+app.MapGet("/error/test", 
+    [EnableCors("AnyOrigin")]
+    [ResponseCache(NoStore = true)] () => 
     { throw new Exception("test"); });
 
 // Controller middleware
