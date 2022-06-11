@@ -32,6 +32,10 @@ builder.Services.AddCors(options => {
 // Learn more about configuring Swagger/OpenAPI
 // at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+// The Swagger Generator service will create a swagger.json file
+// that will describe all the endpoints available within
+// our Web API using the OpenAPI specification
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -41,7 +45,13 @@ var app = builder.Build();
 if (app.Configuration.GetValue<bool>("UseSwagger"))
 {
     // Swagger middlewares
+
+    // Expose swagger.json file using a configurable endpoint
+    // (default is /swagger/v1/swagger.json)
     app.UseSwagger();
+
+    // Enable a handy User Interface (/swagger) that can be used 
+    // to visually see and interactively browse the documentation
     app.UseSwaggerUI();
 }
 
