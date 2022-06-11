@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,8 +52,17 @@ builder.Services.AddEndpointsApiExplorer();
 
 // The Swagger Generator service will create a swagger.json file
 // that will describe all the endpoints available within
-// our Web API using the OpenAPI specification
-builder.Services.AddSwaggerGen();
+// our Web API using the OpenAPI specification. The service is
+// configured to create a JSON documentation file for each version
+// we want to support.
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo { Title = "MyBGList", Version = "v1.0" });
+    options.SwaggerDoc(
+        "v2",
+        new OpenApiInfo { Title = "MyBGList", Version = "v2.0" });
+});
 
 var app = builder.Build();
 
@@ -66,9 +76,17 @@ if (app.Configuration.GetValue<bool>("UseSwagger"))
     // (default is /swagger/v1/swagger.json)
     app.UseSwagger();
 
-    // Enable a handy User Interface (/swagger) that can be used 
-    // to visually see and interactively browse the documentation
-    app.UseSwaggerUI();
+    // Enable a handy User Interface that can be used to visually
+    // see and interactively browse the documentation and make sure
+    // that SwaggerUI will load the different swagger.json files
+    app.UseSwaggerUI(options => {
+        options.SwaggerEndpoint(
+            $"/swagger/v1/swagger.json",
+            $"MyBGList v1");
+        options.SwaggerEndpoint(
+            $"/swagger/v2/swagger.json",
+            $"MyBGList v2");
+    });
 }
 
 // Retrieve the literal value from the appsettings.json file(s)
