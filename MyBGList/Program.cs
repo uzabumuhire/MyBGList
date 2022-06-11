@@ -107,29 +107,35 @@ app.UseCors();
 app.UseAuthorization();
 
 // Handles exceptions for end users
-app.MapGet("/error", 
-    [EnableCors("AnyOrigin")]
-    [ResponseCache(NoStore = true)] () => 
-    Results.Problem());
-
-// For testing exceptions handling
-app.MapGet("/error/test", 
-    [EnableCors("AnyOrigin")]
-    [ResponseCache(NoStore = true)] () => 
-    { throw new Exception("test"); });
-
-app.MapGet("/cod/test",
+app.MapGet("/v{version:ApiVersion}/error",
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [EnableCors("AnyOrigin")]
     [ResponseCache(NoStore = true)] () =>
-    Results.Text("<script>" +
-        "window.alert('Your client supports JavaScript!" +
-        "\\r\\n\\r\\n" +
-        $"Server time (UTC): {DateTime.UtcNow.ToString("o")}" +
-        "\\r\\n" +
-        "Client time (UTC): ' + new Date().toISOString());" +
-        "</script>" +
-        "<noscript>Your client does not support JavaScript</noscript>",
-        "text/html"));
+        Results.Problem());
+
+// For testing exceptions handling
+app.MapGet("/v{version:ApiVersion}/error/test",
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [EnableCors("AnyOrigin")]
+    [ResponseCache(NoStore = true)] () =>
+        { throw new Exception("test"); });
+
+app.MapGet("/v{version:ApiVersion}/cod/test",
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [EnableCors("AnyOrigin")]
+    [ResponseCache(NoStore = true)] () =>
+        Results.Text("<script>" +
+            "window.alert('Your client supports JavaScript!" +
+            "\\r\\n\\r\\n" +
+            $"Server time (UTC): {DateTime.UtcNow.ToString("o")}" +
+            "\\r\\n" +
+            "Client time (UTC): ' + new Date().toISOString());" +
+            "</script>" +
+            "<noscript>Your client does not support JavaScript</noscript>",
+            "text/html"));
 
 // Controller middleware
 app.MapControllers();
