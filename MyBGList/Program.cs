@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,21 @@ builder.Services.AddCors(options => {
             cfg.AllowAnyHeader();
             cfg.AllowAnyMethod();
         });
+});
+
+// SemVer-based API versioning
+
+builder.Services.AddApiVersioning(options => {
+    // Enables URI versioning
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
+builder.Services.AddVersionedApiExplorer(options => {
+
+    // Sets the API versioning format as "'v'major[.minor][-status]"
+    options.GroupNameFormat = "'v'VVV";
+
+    // Replaces the {apiVersion} placeholder with version number
+    options.SubstituteApiVersionInUrl = true;
 });
 
 // Swagger services
