@@ -1,4 +1,4 @@
-﻿namespace MyBGList.DTO
+﻿namespace MyBGList.DTO.v1
 {
     public class LinkDTO
     {
