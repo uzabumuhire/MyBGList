@@ -28,6 +28,16 @@ builder.Services.AddCors(options => {
             cfg.AllowAnyHeader();
             cfg.AllowAnyMethod();
         });
+
+    // Named policy that will only accepts cross-origin requests
+    // performed using the HTTP GET method (with any origin and header)
+    options.AddPolicy(name: "AnyOrigin_GetOnly",
+        cfg => {
+            cfg.AllowAnyOrigin();
+            cfg.AllowAnyHeader();
+            cfg.WithMethods("GET");
+        });
+
 });
 
 // SemVer-based API versioning
@@ -36,6 +46,7 @@ builder.Services.AddApiVersioning(options => {
     // Enables URI versioning
     options.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
+
 builder.Services.AddVersionedApiExplorer(options => {
 
     // Sets the API versioning format as "'v'major[.minor][-status]"
@@ -125,7 +136,7 @@ app.MapGet("/v{version:ApiVersion}/error/test",
 app.MapGet("/v{version:ApiVersion}/cod/test",
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
-    [EnableCors("AnyOrigin")]
+    [EnableCors("AnyOrigin_GetOnly")]
     [ResponseCache(NoStore = true)] () =>
         Results.Text("<script>" +
             "window.alert('Your client supports JavaScript!" +
